@@ -1,4 +1,3 @@
-
 import 'package:flutterappnew/user/user.dart';
 
 import 'authenticatable.dart';

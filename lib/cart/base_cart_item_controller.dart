@@ -1,4 +1,3 @@
-
 import 'base_cart_item.dart';
 
 class BaseCartItemController {

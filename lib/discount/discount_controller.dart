@@ -1,4 +1,3 @@
-
 import 'base_discount.dart';
 
 class DiscountController {

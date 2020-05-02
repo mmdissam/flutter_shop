@@ -1,4 +1,3 @@
-
 import 'base_image.dart';
 
 class ImageController {

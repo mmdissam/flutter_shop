@@ -1,4 +1,3 @@
-
 import 'user.dart';
 
 class ShopOwner extends User {
