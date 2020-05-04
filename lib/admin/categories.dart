@@ -22,17 +22,21 @@ class _CategoriesState extends State<Categories> {
               return new ListView(
                 children:
                 snapshot.data.documents.map((DocumentSnapshot document) {
-                  return new ListTile(
-                      title: new Text(document['title']),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
-                        onPressed: (){
-                          Firestore.instance.collection('categories').document(document.documentID).delete();
-                        },
-                      ));
+                  if(document['title'] == 'Select Category'){
+                    return SizedBox(height: 0,);
+                  }else{
+                    return ListTile(
+                        title:Text(document['title']),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: (){
+                            Firestore.instance.collection('categories').document(document.documentID).delete();
+                          },
+                        ));
+                  }
                 }).toList(),
               );
           }

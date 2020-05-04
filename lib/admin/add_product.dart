@@ -12,6 +12,8 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   bool isLoading = false;
+  bool _isWrongCategory = false;
+  String dropdownValue = 'Select Category';
 
   @override
   void dispose() {
@@ -76,6 +78,11 @@ class _AddProductState extends State<AddProduct> {
                 SizedBox(
                   height: 16,
                 ),
+                SizedBox(
+                  child: _selectCategory(),
+                  width: 500,
+                ),
+                SizedBox(height: 16),
                 RaisedButton(
                   child: Text('Save Product'),
                   onPressed: () {
@@ -89,7 +96,8 @@ class _AddProductState extends State<AddProduct> {
                           .setData({
                         'title': _titleController.text,
                         'discription': _descriptionController.text,
-                        'price': _priceController.text
+                        'price': _priceController.text,
+                        'title_category': dropdownValue,
                       }).then((onValue) {
                         setState(() {
                           isLoading = false;
@@ -101,11 +109,63 @@ class _AddProductState extends State<AddProduct> {
                     }
                   },
                 ),
+                SizedBox(
+                    width: double.infinity,
+                    child: (_isWrongCategory)
+                        ? Text(
+                            'You Must Selecting Category',
+                            style: TextStyle(color: Colors.red.shade800),
+                          )
+                        : Container()),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  _selectCategory() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('categories').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new Text('Loading...');
+          default:
+            return DropdownButton<String>(
+              value: dropdownValue,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              isExpanded: true,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                if (newValue == 'Select Category') {
+                  setState(() {
+                    _isWrongCategory = true;
+                  });
+                } else {
+                  setState(() {
+                    dropdownValue = newValue;
+                    _isWrongCategory = false;
+                  });
+                }
+              },
+              items: snapshot.data.documents.map((DocumentSnapshot document) {
+                return DropdownMenuItem<String>(
+                  value: document['title'],
+                  child: Text(document['title']),
+                );
+              }).toList(),
+            );
+        }
+      },
     );
   }
 }

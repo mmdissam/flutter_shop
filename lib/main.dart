@@ -1,20 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterappnew/admin/add_category.dart';
-import 'package:flutterappnew/admin/add_product.dart';
 import 'package:flutterappnew/admin/categories.dart';
 import 'package:flutterappnew/admin/products.dart';
-import 'package:hidden_drawer_menu/controllers/hidden_drawer_controller.dart';
 import 'package:hidden_drawer_menu/hidden_drawer/hidden_drawer_menu.dart';
-import 'package:hidden_drawer_menu/hidden_drawer/screen_hidden_drawer.dart';
-import 'package:hidden_drawer_menu/menu/hidden_menu.dart';
-import 'package:hidden_drawer_menu/menu/item_hidden_menu.dart';
-import 'package:hidden_drawer_menu/menu/item_hidden_menu_right.dart';
-import 'package:hidden_drawer_menu/simple_hidden_drawer/animated_drawer_content.dart';
-import 'package:hidden_drawer_menu/simple_hidden_drawer/bloc/simple_hidden_drawer_bloc.dart';
-import 'package:hidden_drawer_menu/simple_hidden_drawer/provider/simple_hidden_drawer_provider.dart';
-import 'package:hidden_drawer_menu/simple_hidden_drawer/simple_hidden_drawer.dart';
-import 'package:hidden_drawer_menu/simple_hidden_drawer/streams/streams_simple_hidden_menu.dart';
+
+import 'admin/add_category.dart';
+import 'admin/add_product.dart';
+
 
 main() {
   runApp(FlutterShop());
@@ -36,12 +28,50 @@ class FlutterShop extends StatelessWidget {
   }
 }
 
+/*
+SimpleHiddenDrawer(
+        initPositionSelected: 100,
+        contentCornerRadius: 60,
+        isDraggable: true,
+        menu: AuthTest(),
+        screenSelectedBuilder: (position, controller) {
+          Widget screenCurrent;
+          switch (position) {
+            case 0:
+              screenCurrent = Categories();
+              break;
+            case 1:
+              screenCurrent = AllProducts();
+              break;
+            case 2:
+              screenCurrent = AddCategoryScreen();
+              break;
+            case 3:
+              screenCurrent = AddProduct();
+              break;
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    controller.toggle();
+                  }),
+            ),
+            body: screenCurrent,
+          );
+        },
+      ),
+* */
+
 class AuthTest extends StatefulWidget {
   @override
   _AuthTestState createState() => _AuthTestState();
 }
 
 class _AuthTestState extends State<AuthTest> {
+
   List<ScreenHiddenDrawer> items = new List();
 
 //  TextEditingController _emailController = TextEditingController();
@@ -87,6 +117,8 @@ class _AuthTestState extends State<AuthTest> {
     super.initState();
   }
 
+
+
   @override
   void dispose() {
 //    _emailController.dispose();
@@ -97,7 +129,7 @@ class _AuthTestState extends State<AuthTest> {
   @override
   Widget build(BuildContext context) {
 
-    return HiddenDrawerMenu(
+ return HiddenDrawerMenu(
       backgroundColorMenu: Colors.blueGrey,
       backgroundColorAppBar: Colors.cyan,
       screens: items,
@@ -119,29 +151,70 @@ class _AuthTestState extends State<AuthTest> {
           enableShadowItensMenu: true,
       //    backgroundMenu: DecorationImage(image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
     );
+  }
+}
+/*
+         Container(
+      width: double.maxFinite,
+      height: double.maxFinite,
+      color: Colors.cyan,
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            RaisedButton(
+              onPressed: () {
+                SimpleHiddenDrawerProvider.of(context)
+                    .setSelectedMenuPosition(0);
+              },
+              child: Text('Categories'.toUpperCase()),
+            ),
+            RaisedButton(
+              onPressed: () {
+                SimpleHiddenDrawerProvider.of(context)
+                    .setSelectedMenuPosition(1);
+              },
+              child: Text('products'.toUpperCase()),
+            ),
+            RaisedButton(
+              onPressed: () {
+                SimpleHiddenDrawerProvider.of(context)
+                    .setSelectedMenuPosition(2);
+              },
+              child: Text('add category'.toUpperCase()),
+            ),
+            RaisedButton(
+              onPressed: () {
+                SimpleHiddenDrawerProvider.of(context)
+                    .setSelectedMenuPosition(3);
+              },
+              child: Text('add product'.toUpperCase()),
+            ),
+          ],
+        ),
+      ),
+    );
+        * */
 
 
 
-
-    /*List<int> number = [1,2,3,4,5];
+/*List<int> number = [1,2,3,4,5];
 
     List<int> newNumbers = number.map((int number) {
       return number*5;
     }).toList();
     */
 
-
-
-
-   /* return Scaffold(
+/* return Scaffold(
         appBar: AppBar(
           title: Text('Flutter Shop'),
           centerTitle: true,
         ),
         drawer:
     );*/
-  }
-}
 
 /*
 Widget _scaffold(){
@@ -212,7 +285,7 @@ Widget _scaffold(){
 }
 */
 /*
-DrawerHeader(
+Widget _DrawerHeader(){
         margin: EdgeInsets.only(left: 120),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -256,7 +329,6 @@ DrawerHeader(
             ),
           ],
         ),
-      ),
-* */
+      );
 
-
+}*/
