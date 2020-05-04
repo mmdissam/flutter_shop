@@ -1,7 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterappnew/admin/add_category.dart';
 import 'package:flutterappnew/admin/add_product.dart';
-import 'package:flutterappnew/authentication/firebase_auth.dart';
-import 'admin/product.dart';
+import 'package:flutterappnew/admin/categories.dart';
+import 'package:flutterappnew/admin/products.dart';
+import 'package:hidden_drawer_menu/controllers/hidden_drawer_controller.dart';
+import 'package:hidden_drawer_menu/hidden_drawer/hidden_drawer_menu.dart';
+import 'package:hidden_drawer_menu/hidden_drawer/screen_hidden_drawer.dart';
+import 'package:hidden_drawer_menu/menu/hidden_menu.dart';
+import 'package:hidden_drawer_menu/menu/item_hidden_menu.dart';
+import 'package:hidden_drawer_menu/menu/item_hidden_menu_right.dart';
+import 'package:hidden_drawer_menu/simple_hidden_drawer/animated_drawer_content.dart';
+import 'package:hidden_drawer_menu/simple_hidden_drawer/bloc/simple_hidden_drawer_bloc.dart';
+import 'package:hidden_drawer_menu/simple_hidden_drawer/provider/simple_hidden_drawer_provider.dart';
+import 'package:hidden_drawer_menu/simple_hidden_drawer/simple_hidden_drawer.dart';
+import 'package:hidden_drawer_menu/simple_hidden_drawer/streams/streams_simple_hidden_menu.dart';
 
 main() {
   runApp(FlutterShop());
@@ -11,10 +24,14 @@ class FlutterShop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(primaryColor: Colors.pink),
       home: AuthTest(),
-      theme: ThemeData(
-        primaryColor: Colors.pink
-      ),
+//      routes: {
+//        '/categories': (context) => AddCategoryScreen(),
+//        '/products': (context) => AllProducts(),
+//        '/add_product': (context) => AddProduct(),
+//        '/add_category': (context) => AddCategoryScreen(),
+//      },
     );
   }
 }
@@ -25,12 +42,47 @@ class AuthTest extends StatefulWidget {
 }
 
 class _AuthTestState extends State<AuthTest> {
+  List<ScreenHiddenDrawer> items = new List();
+
 //  TextEditingController _emailController = TextEditingController();
 //  TextEditingController _passwordController = TextEditingController();
 //  FirebaseAuthentication firebaseAuthentication = FirebaseAuthentication();
 
   @override
   void initState() {
+    items.add(new ScreenHiddenDrawer(
+        new ItemHiddenMenu(
+          name: "Categories".toUpperCase(),
+          baseStyle: TextStyle(
+              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          colorLineSelected: Colors.teal,
+        ),
+        Categories()));
+
+    items.add(new ScreenHiddenDrawer(
+        new ItemHiddenMenu(
+          name: "Products".toUpperCase(),
+          baseStyle: TextStyle(
+              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          colorLineSelected: Colors.orange,
+        ),
+        AllProducts()));
+    items.add(new ScreenHiddenDrawer(
+        new ItemHiddenMenu(
+          name: "Add Product".toUpperCase(),
+          baseStyle: TextStyle(
+              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          colorLineSelected: Colors.orange,
+        ),
+        AddProduct()));
+    items.add(new ScreenHiddenDrawer(
+        new ItemHiddenMenu(
+          name: "Add Category".toUpperCase(),
+          baseStyle: TextStyle(
+              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          colorLineSelected: Colors.orange,
+        ),
+        AddCategoryScreen()));
 //    firebaseAuthentication.getCurrentUser();
     super.initState();
   }
@@ -44,17 +96,52 @@ class _AuthTestState extends State<AuthTest> {
 
   @override
   Widget build(BuildContext context) {
-    
+
+    return HiddenDrawerMenu(
+      backgroundColorMenu: Colors.blueGrey,
+      backgroundColorAppBar: Colors.cyan,
+      screens: items,
+//          typeOpen: TypeOpen.FROM_RIGHT,
+          enableScaleAnimin: true,
+//          enableCornerAnimin: true,
+          slidePercent: 80.0,
+          verticalScalePercent: 80.0,
+          contentCornerRadius: 60.0,
+      //    iconMenuAppBar: Icon(Icons.menu),
+      //    backgroundContent: DecorationImage((image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
+          whithAutoTittleName: true,
+//          styleAutoTittleName: TextStyle(color: Colors.white),
+
+      //    actionsAppBar: <Widget>[],
+      //    backgroundColorContent: Colors.blue,
+//          elevationAppBar: 10.0,
+//          tittleAppBar: Center(child: Icon(Icons.ac_unit),),
+          enableShadowItensMenu: true,
+      //    backgroundMenu: DecorationImage(image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
+    );
+
+
+
+
     /*List<int> number = [1,2,3,4,5];
 
     List<int> newNumbers = number.map((int number) {
       return number*5;
     }).toList();
     */
-    return AllProduct();
+
+
+
+
+   /* return Scaffold(
+        appBar: AppBar(
+          title: Text('Flutter Shop'),
+          centerTitle: true,
+        ),
+        drawer:
+    );*/
   }
 }
-
 
 /*
 Widget _scaffold(){
@@ -124,3 +211,52 @@ Widget _scaffold(){
   );
 }
 */
+/*
+DrawerHeader(
+        margin: EdgeInsets.only(left: 120),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: ListTile(
+                title: Text('Categories'.toUpperCase()),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/categories');
+                },
+              ),
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text('products'.toUpperCase()),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/products');
+                },
+              ),
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text('add category'.toUpperCase()),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/add_category');
+                },
+              ),
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text('add product'.toUpperCase()),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/add_product');
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+* */
+
+

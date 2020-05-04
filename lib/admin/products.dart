@@ -1,22 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AllProduct extends StatefulWidget {
+class AllProducts extends StatefulWidget {
   @override
-  _AllProductState createState() => _AllProductState();
+  _AllProductsState createState() => _AllProductsState();
 }
 
-class _AllProductState extends State<AllProduct> {
+class _AllProductsState extends State<AllProducts> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Products'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: _allProduct(),
-      ),
+    return  Center(
+      child: _allProduct(),
     );
   }
 
