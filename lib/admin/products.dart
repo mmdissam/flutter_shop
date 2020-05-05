@@ -9,26 +9,33 @@ class AllProducts extends StatefulWidget {
 class _AllProductsState extends State<AllProducts> {
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return Center(
       child: _allProduct(),
     );
   }
 
-
-  Widget _allProduct(){
+  Widget _allProduct() {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('products').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError)
-          return new Text('Error: ${snapshot.error}');
+        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
-          case ConnectionState.waiting: return new Text('Loading...');
+          case ConnectionState.waiting:
+            return new Text('Loading...');
           default:
             return new ListView(
-              children: snapshot.data.documents.map((DocumentSnapshot document) {
+              children:
+                  snapshot.data.documents.map((DocumentSnapshot document) {
                 return new ListTile(
                   title: new Text(document['title']),
                   subtitle: new Text(document['price']),
+                  trailing: (document['imagesUrl'] != null)
+                      ? SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Image(
+                              image: NetworkImage(document['imagesUrl'][0])))
+                      : SizedBox(),
                 );
               }).toList(),
             );

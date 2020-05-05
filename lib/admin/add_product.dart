@@ -13,7 +13,7 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   final _formKey = GlobalKey<FormState>();
-  File _image;
+  File _image1, _image2, _image3;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
@@ -22,11 +22,16 @@ class _AddProductState extends State<AddProduct> {
   bool _isWrongCategory = false;
   String dropdownValue = 'Select Category';
 
-  Future getImage() async {
+  Future getImage(File requiredImage) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      _image = image;
+      requiredImage = image;
     });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -97,10 +102,11 @@ class _AddProductState extends State<AddProduct> {
                   width: 500,
                 ),
                 SizedBox(height: 16),
-                RaisedButton(
+               _displayGridImages(),
+                /* RaisedButton(
                   onPressed: getImage,
                   child: Text('Add Image'),
-                ),
+                ),*/
                 SizedBox(height: 16),
                 RaisedButton(
                   child: Text('Save Product'),
@@ -109,6 +115,11 @@ class _AddProductState extends State<AddProduct> {
                       setState(() {
                         isLoading = true;
                       });
+                      String imageUrl1 = await uploadImage(_image1);
+                      String imageUrl2 =await uploadImage(_image2);
+                      String imageUrl3 = await uploadImage(_image3);
+                      List<String> imagesUrl = [imageUrl1,imageUrl2,imageUrl3];
+
                       await Firestore.instance
                           .collection('products')
                           .document()
@@ -117,6 +128,7 @@ class _AddProductState extends State<AddProduct> {
                         'discription': _descriptionController.text,
                         'price': _priceController.text,
                         'title_category': dropdownValue,
+                        'imagesUrl' : imagesUrl,
                       }).then((onValue) {
                         setState(() {
                           isLoading = false;
@@ -126,7 +138,7 @@ class _AddProductState extends State<AddProduct> {
                         _priceController.text = '';
                         dropdownValue = 'Select Category';
                       });
-                      await uploadImage(_image);
+
                     }
                   },
                 ),
@@ -190,13 +202,61 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  Future<void> uploadImage(File image) async {
+  Future<String> uploadImage(File image) async {
     String name = 'product_' + Random().nextInt(1000).toString();
     final StorageReference storageReference =
         FirebaseStorage().ref().child(name);
     final StorageUploadTask uploadTask = storageReference.putFile(image);
-    await uploadTask.onComplete;
+    StorageTaskSnapshot response = await uploadTask.onComplete;
+    String url= await response.ref.getDownloadURL();
+    return url;
   }
 
-
+  Widget _displayGridImages() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            InkWell(
+              child: Container(
+                padding: EdgeInsets.all(8),
+                color: Colors.tealAccent,
+              ),
+              onTap: () async{
+                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  _image1 = image;
+                });
+              },
+            ),
+            InkWell(
+              child: Container(
+                padding: EdgeInsets.all(8),
+                color: Colors.tealAccent,
+              ),
+              onTap: () async{
+                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  _image2 = image;
+                });
+              },
+            ),
+            InkWell(
+              child: Container(
+                padding: EdgeInsets.all(8),
+                color: Colors.tealAccent,
+              ),
+              onTap: () async{
+                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  _image3 = image;
+                });
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
