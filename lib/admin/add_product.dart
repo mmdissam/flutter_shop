@@ -1,5 +1,10 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -8,12 +13,21 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   final _formKey = GlobalKey<FormState>();
+  File _image;
+
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   bool isLoading = false;
   bool _isWrongCategory = false;
   String dropdownValue = 'Select Category';
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   void dispose() {
@@ -84,13 +98,18 @@ class _AddProductState extends State<AddProduct> {
                 ),
                 SizedBox(height: 16),
                 RaisedButton(
+                  onPressed: getImage,
+                  child: Text('Add Image'),
+                ),
+                SizedBox(height: 16),
+                RaisedButton(
                   child: Text('Save Product'),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       setState(() {
                         isLoading = true;
                       });
-                      Firestore.instance
+                      await Firestore.instance
                           .collection('products')
                           .document()
                           .setData({
@@ -105,7 +124,9 @@ class _AddProductState extends State<AddProduct> {
                         _titleController.text = '';
                         _descriptionController.text = '';
                         _priceController.text = '';
+                        dropdownValue = 'Select Category';
                       });
+                      await uploadImage(_image);
                     }
                   },
                 ),
@@ -168,4 +189,14 @@ class _AddProductState extends State<AddProduct> {
       },
     );
   }
+
+  Future<void> uploadImage(File image) async {
+    String name = 'product_' + Random().nextInt(1000).toString();
+    final StorageReference storageReference =
+        FirebaseStorage().ref().child(name);
+    final StorageUploadTask uploadTask = storageReference.putFile(image);
+    await uploadTask.onComplete;
+  }
+
+
 }
