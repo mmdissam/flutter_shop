@@ -14,6 +14,17 @@ class _AllProductsState extends State<AllProducts> {
     );
   }
 
+  Widget _image(var document) {
+    return (document['imagesUrl'] != null)
+        ? Image(
+      fit: BoxFit.cover,
+      image: NetworkImage(
+        document['imagesUrl'][0],
+      ),
+    )
+        : Container();
+  }
+
   Widget _allProduct() {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('products').snapshots(),
@@ -26,16 +37,18 @@ class _AllProductsState extends State<AllProducts> {
             return new ListView(
               children:
                   snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text(document['title']),
-                  subtitle: new Text(document['price']),
-                  trailing: (document['imagesUrl'] != null)
-                      ? SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image(
-                              image: NetworkImage(document['imagesUrl'][0])))
-                      : SizedBox(),
+                    return Column(
+                      children: <Widget>[
+                        _image(document),
+                        Card(
+                          child: ListTile(
+                            title: Text(document['title']),
+                            subtitle: Text(document['price']),
+                          ),
+                          borderOnForeground: true,
+                          elevation: 120,
+                        ),
+                      ],
                 );
               }).toList(),
             );

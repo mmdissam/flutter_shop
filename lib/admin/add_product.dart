@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,7 +23,7 @@ class _AddProductState extends State<AddProduct> {
   String dropdownValue = 'Select Category';
 
   Future getImage(File requiredImage) async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       requiredImage = image;
     });
@@ -42,8 +42,15 @@ class _AddProductState extends State<AddProduct> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _isLoading() {
+    return Container(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _addProduct() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView(
@@ -102,7 +109,7 @@ class _AddProductState extends State<AddProduct> {
                   width: 500,
                 ),
                 SizedBox(height: 16),
-               _displayGridImages(),
+                _displayGridImages(),
                 /* RaisedButton(
                   onPressed: getImage,
                   child: Text('Add Image'),
@@ -116,9 +123,13 @@ class _AddProductState extends State<AddProduct> {
                         isLoading = true;
                       });
                       String imageUrl1 = await uploadImage(_image1);
-                      String imageUrl2 =await uploadImage(_image2);
+                      String imageUrl2 = await uploadImage(_image2);
                       String imageUrl3 = await uploadImage(_image3);
-                      List<String> imagesUrl = [imageUrl1,imageUrl2,imageUrl3];
+                      List<String> imagesUrl = [
+                        imageUrl1,
+                        imageUrl2,
+                        imageUrl3
+                      ];
 
                       await Firestore.instance
                           .collection('products')
@@ -128,7 +139,7 @@ class _AddProductState extends State<AddProduct> {
                         'discription': _descriptionController.text,
                         'price': _priceController.text,
                         'title_category': dropdownValue,
-                        'imagesUrl' : imagesUrl,
+                        'imagesUrl': imagesUrl,
                       }).then((onValue) {
                         setState(() {
                           isLoading = false;
@@ -138,7 +149,6 @@ class _AddProductState extends State<AddProduct> {
                         _priceController.text = '';
                         dropdownValue = 'Select Category';
                       });
-
                     }
                   },
                 ),
@@ -146,9 +156,9 @@ class _AddProductState extends State<AddProduct> {
                     width: double.infinity,
                     child: (_isWrongCategory)
                         ? Text(
-                            'You Must Selecting Category',
-                            style: TextStyle(color: Colors.red.shade800),
-                          )
+                      'You Must Selecting Category',
+                      style: TextStyle(color: Colors.red.shade800),
+                    )
                         : Container()),
               ],
             ),
@@ -157,6 +167,11 @@ class _AddProductState extends State<AddProduct> {
       ),
     );
   }
+  @override
+  Widget build(BuildContext context) {
+    return (isLoading) ? _isLoading() : _addProduct();
+  }
+
 
   _selectCategory() {
     return StreamBuilder(
@@ -203,7 +218,8 @@ class _AddProductState extends State<AddProduct> {
   }
 
   Future<String> uploadImage(File image) async {
-    String name = 'product_' + Random().nextInt(1000).toString();
+    String now = formatDate(DateTime.now(), [HH, ':', nn, ':', ss, ' ', Z]);
+    String name = '${_titleController.text}' + now;
     final StorageReference storageReference =
         FirebaseStorage().ref().child(name);
     final StorageUploadTask uploadTask = storageReference.putFile(image);
@@ -224,7 +240,8 @@ class _AddProductState extends State<AddProduct> {
                 color: Colors.tealAccent,
               ),
               onTap: () async{
-                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                var image = await ImagePicker.pickImage(
+                    source: ImageSource.camera);
                 setState(() {
                   _image1 = image;
                 });
@@ -236,7 +253,8 @@ class _AddProductState extends State<AddProduct> {
                 color: Colors.tealAccent,
               ),
               onTap: () async{
-                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                var image = await ImagePicker.pickImage(
+                    source: ImageSource.camera);
                 setState(() {
                   _image2 = image;
                 });
@@ -248,7 +266,8 @@ class _AddProductState extends State<AddProduct> {
                 color: Colors.tealAccent,
               ),
               onTap: () async{
-                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                var image = await ImagePicker.pickImage(
+                    source: ImageSource.camera);
                 setState(() {
                   _image3 = image;
                 });

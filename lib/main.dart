@@ -7,7 +7,6 @@ import 'package:hidden_drawer_menu/hidden_drawer/hidden_drawer_menu.dart';
 import 'admin/add_category.dart';
 import 'admin/add_product.dart';
 
-
 main() {
   runApp(FlutterShop());
 }
@@ -71,7 +70,6 @@ class AuthTest extends StatefulWidget {
 }
 
 class _AuthTestState extends State<AuthTest> {
-
   List<ScreenHiddenDrawer> items = new List();
 
 //  TextEditingController _emailController = TextEditingController();
@@ -83,8 +81,8 @@ class _AuthTestState extends State<AuthTest> {
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           name: "Categories".toUpperCase(),
-          baseStyle: TextStyle(
-              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          baseStyle:
+          TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 28.0),
           colorLineSelected: Colors.teal,
         ),
         Categories()));
@@ -92,32 +90,30 @@ class _AuthTestState extends State<AuthTest> {
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           name: "Products".toUpperCase(),
-          baseStyle: TextStyle(
-              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          baseStyle:
+          TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 28.0),
           colorLineSelected: Colors.orange,
         ),
         AllProducts()));
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           name: "Add Product".toUpperCase(),
-          baseStyle: TextStyle(
-              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          baseStyle:
+          TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 28.0),
           colorLineSelected: Colors.orange,
         ),
         AddProduct()));
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           name: "Add Category".toUpperCase(),
-          baseStyle: TextStyle(
-              color: Colors.white.withOpacity(0.8), fontSize: 28.0),
+          baseStyle:
+          TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 28.0),
           colorLineSelected: Colors.orange,
         ),
         AddCategoryScreen()));
 //    firebaseAuthentication.getCurrentUser();
     super.initState();
   }
-
-
 
   @override
   void dispose() {
@@ -128,8 +124,7 @@ class _AuthTestState extends State<AuthTest> {
 
   @override
   Widget build(BuildContext context) {
-
- return HiddenDrawerMenu(
+    return HiddenDrawerMenu(
       backgroundColorMenu: Colors.blueGrey,
       backgroundColorAppBar: Colors.cyan,
       screens: items,
@@ -151,6 +146,7 @@ class _AuthTestState extends State<AuthTest> {
           enableShadowItensMenu: true,
       //    backgroundMenu: DecorationImage(image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
     );
+
   }
 }
 /*
@@ -198,8 +194,6 @@ class _AuthTestState extends State<AuthTest> {
       ),
     );
         * */
-
-
 
 /*List<int> number = [1,2,3,4,5];
 
@@ -332,3 +326,70 @@ Widget _DrawerHeader(){
       );
 
 }*/
+
+
+/*
+*  return Scaffold(
+      appBar: AppBar(
+        title: Text('Auth Test'),
+        centerTitle: true,
+      ),
+      body: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Register'),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  RaisedButton(
+                    child: Text('Register'),
+                    onPressed: () async {
+                      String email = _emailController.text.trim();
+                      String password = _passwordController.text.trim();
+                      await firebaseAuthentication.register(email, password);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  RaisedButton(
+                    child: Text('Sign Out'),
+                    onPressed: () async {
+                      await firebaseAuthentication.signOut();
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  RaisedButton(
+                    child: Text('Sign In'),
+                    onPressed: () async {
+                      String email = _emailController.text.trim();
+                      String password = _passwordController.text.trim();
+                      await firebaseAuthentication.singIn(email, password);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );*/
